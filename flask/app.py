@@ -4,11 +4,20 @@ from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 import os
-
+import zipfile
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+zip_path = 'model1.zip'
+extract_path = '.'  # or wherever you want to extract the .h5 file
+
+with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    zip_ref.extractall(extract_path)
+
+
+
 app = Flask(__name__)
-model = load_model('model1.h5', compile=False)
+model_path = os.path.join(extract_path, 'model1.h5')
+model = load_model(model_path, compile=False)
 
 labels = ['arecaceae', 'anadenanthera', 'arrabidaea', 'cecropia', 'chromolaena', 'combretum', 'croton', 'dipteryx', 'eucalyptus', 'ficus', 'guarea', 'hymenaea', 'inga', 'jacaranda', 'machaerium', 'myrcia', 'ocotea', 'piper', 'protium', 'psidium', 'schinus', 'solanum', 'urochloa']
 @app.route('/predict-page')
